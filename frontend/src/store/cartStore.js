@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import axios from 'axios';
+import api from '../config/api.js';
 
 const useCartStore = create((set, get) => ({
     cartItems: [],
@@ -10,7 +10,7 @@ const useCartStore = create((set, get) => ({
     fetchCart: async () => {
         set({ loading: true, error: null });
         try {
-            const response = await axios.get('/api/cart');
+            const response = await api.get('/cart');
             set({ cartItems: response.data, loading: false });
         } catch (error) {
             set({ error: error.response?.data?.message || 'Failed to fetch cart', loading: false });
@@ -21,7 +21,7 @@ const useCartStore = create((set, get) => ({
     addToCart: async (productId, quantity = 1) => {
         set({ loading: true, error: null });
         try {
-            await axios.post('/api/cart', { product_id: productId, quantity });
+            await api.post('/cart', { product_id: productId, quantity });
             await get().fetchCart(); // Refresh cart
             return { success: true };
         } catch (error) {
@@ -35,7 +35,7 @@ const useCartStore = create((set, get) => ({
     updateCartItem: async (cartItemId, quantity) => {
         set({ loading: true, error: null });
         try {
-            await axios.put(`/api/cart/${cartItemId}`, { quantity });
+            await api.put(`/cart/${cartItemId}`, { quantity });
             await get().fetchCart(); // Refresh cart
             return { success: true };
         } catch (error) {
@@ -49,7 +49,7 @@ const useCartStore = create((set, get) => ({
     removeFromCart: async (cartItemId) => {
         set({ loading: true, error: null });
         try {
-            await axios.delete(`/api/cart/${cartItemId}`);
+            await api.delete(`/cart/${cartItemId}`);
             set((state) => ({
                 cartItems: state.cartItems.filter((item) => item.id !== cartItemId),
                 loading: false
@@ -66,7 +66,7 @@ const useCartStore = create((set, get) => ({
     clearCart: async () => {
         set({ loading: true, error: null });
         try {
-            await axios.delete('/api/cart');
+            await api.delete('/cart');
             set({ cartItems: [], loading: false });
         } catch (error) {
             set({ error: error.response?.data?.message || 'Failed to clear cart', loading: false });

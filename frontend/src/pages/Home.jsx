@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../config/api.js';
 import useProductStore from '../store/productStore';
 import ProductCard from '../components/ProductCard';
 import Header from '../components/Header';
@@ -19,7 +19,7 @@ const Home = () => {
 
     const loadPageLayout = async () => {
         try {
-            const response = await axios.get('/api/page-builder/home');
+            const response = await api.get('/page-builder/home');
             if (response.data.layout_data && response.data.layout_data.length > 0) {
                 setPageComponents(response.data.layout_data);
             }

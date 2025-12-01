@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import axios from 'axios';
+import api from '../config/api.js';
 
 const useProductStore = create((set) => ({
     products: [],
@@ -12,7 +12,7 @@ const useProductStore = create((set) => ({
         set({ loading: true, error: null });
         try {
             const params = new URLSearchParams(filters);
-            const response = await axios.get(`/api/products?${params}`);
+            const response = await api.get(`/products?${params}`);
             set({ products: response.data, loading: false });
         } catch (error) {
             set({ error: error.response?.data?.message || 'Failed to fetch products', loading: false });
@@ -23,7 +23,7 @@ const useProductStore = create((set) => ({
     fetchProduct: async (id) => {
         set({ loading: true, error: null });
         try {
-            const response = await axios.get(`/api/products/${id}`);
+            const response = await api.get(`/products/${id}`);
             set({ currentProduct: response.data, loading: false });
         } catch (error) {
             set({ error: error.response?.data?.message || 'Failed to fetch product', loading: false });
@@ -34,7 +34,7 @@ const useProductStore = create((set) => ({
     createProduct: async (formData) => {
         set({ loading: true, error: null });
         try {
-            const response = await axios.post('/api/products', formData, {
+            const response = await api.post('/products', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
@@ -55,7 +55,7 @@ const useProductStore = create((set) => ({
     updateProduct: async (id, formData) => {
         set({ loading: true, error: null });
         try {
-            const response = await axios.put(`/api/products/${id}`, formData, {
+            const response = await api.put(`/products/${id}`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
@@ -79,7 +79,7 @@ const useProductStore = create((set) => ({
     deleteProduct: async (id) => {
         set({ loading: true, error: null });
         try {
-            await axios.delete(`/api/products/${id}`);
+            await api.delete(`/products/${id}`);
 
             set((state) => ({
                 products: state.products.filter((p) => p.id !== id),

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../config/api.js';
 
 const Footer = () => {
     const [siteSettings, setSiteSettings] = useState({
@@ -14,7 +14,7 @@ const Footer = () => {
 
     const loadSettings = async () => {
         try {
-            const response = await axios.get('/api/settings');
+            const response = await api.get('/settings');
             setSiteSettings({
                 siteName: response.data.siteName || 'E-Commerce',
                 logoUrl: response.data.logoUrl || '',

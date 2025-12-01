@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../config/api.js';
 import Header from '../../components/Header';
 
 const SiteSettings = () => {
@@ -19,7 +19,7 @@ const SiteSettings = () => {
 
     const loadSettings = async () => {
         try {
-            const response = await axios.get('/api/settings');
+            const response = await api.get('/settings');
             if (response.data) {
                 setSettings({ ...settings, ...response.data });
             }
@@ -32,7 +32,7 @@ const SiteSettings = () => {
         setSaving(true);
         setMessage('');
         try {
-            await axios.post('/api/settings', settings);
+            await api.post('/settings', settings);
             setMessage('Settings saved! Refresh the page to see changes.');
         } catch (error) {
             setMessage('Error saving settings: ' + (error.response?.data?.message || error.message));

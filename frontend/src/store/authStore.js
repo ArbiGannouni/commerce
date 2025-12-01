@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import axios from 'axios';
+import api from '../config/api.js';
 
 const useAuthStore = create((set) => ({
     user: null,
@@ -8,13 +8,11 @@ const useAuthStore = create((set) => ({
     loading: false,
     error: null,
 
-    // Set auth header for axios
-    setAuthHeader: (token) => {
+    // Set auth token in localStorage
+    setAuthToken: (token) => {
         if (token) {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             localStorage.setItem('token', token);
         } else {
-            delete axios.defaults.headers.common['Authorization'];
             localStorage.removeItem('token');
         }
     },
@@ -23,11 +21,11 @@ const useAuthStore = create((set) => ({
     register: async (userData) => {
         set({ loading: true, error: null });
         try {
-            const response = await axios.post('/api/auth/register', userData);
+            const response = await api.post('/auth/register', userData);
             const { token, user } = response.data;
 
             set((state) => {
-                state.setAuthHeader(token);
+                state.setAuthToken(token);
                 return {
                     user,
                     token,
@@ -48,11 +46,11 @@ const useAuthStore = create((set) => ({
     login: async (credentials) => {
         set({ loading: true, error: null });
         try {
-            const response = await axios.post('/api/auth/login', credentials);
+            const response = await api.post('/auth/login', credentials);
             const { token, user } = response.data;
 
             set((state) => {
-                state.setAuthHeader(token);
+                state.setAuthToken(token);
                 return {
                     user,
                     token,
@@ -72,7 +70,7 @@ const useAuthStore = create((set) => ({
     // Logout
     logout: () => {
         set((state) => {
-            state.setAuthHeader(null);
+            state.setAuthToken(null);
             return {
                 user: null,
                 token: null,
@@ -88,16 +86,16 @@ const useAuthStore = create((set) => ({
         if (!token) return;
 
         set((state) => {
-            state.setAuthHeader(token);
+            state.setAuthToken(token);
             return { loading: true };
         });
 
         try {
-            const response = await axios.get('/api/auth/me');
+            const response = await api.get('/auth/me');
             set({ user: response.data.user, isAuthenticated: true, loading: false });
         } catch (error) {
             set((state) => {
-                state.setAuthHeader(null);
+                state.setAuthToken(null);
                 return {
                     user: null,
                     token: null,

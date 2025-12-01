@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../config/api.js';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ComponentRenderer from './admin/ComponentRenderer';
@@ -19,7 +19,7 @@ const RenderPage = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.get(`/api/page-builder/${pageName || 'home'}`);
+            const response = await api.get(`/page-builder/${pageName || 'home'}`);
             setComponents(response.data.layout_data);
         } catch (error) {
             console.error('Error loading page:', error);

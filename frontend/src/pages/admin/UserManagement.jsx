@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../config/api.js';
 import Header from '../../components/Header';
 
 const UserManagement = () => {
@@ -12,7 +12,7 @@ const UserManagement = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await axios.get('/api/users/all');
+            const response = await api.get('/users/all');
             setUsers(response.data);
         } catch (error) {
             console.error('Error fetching users:', error);
@@ -23,7 +23,7 @@ const UserManagement = () => {
 
     const updateUserRole = async (userId, newRole) => {
         try {
-            await axios.patch(`/api/users/${userId}/role`, { role: newRole });
+            await api.patch(`/users/${userId}/role`, { role: newRole });
             fetchUsers(); // Refresh the list
         } catch (error) {
             alert(error.response?.data?.message || 'Error updating user role');
@@ -34,7 +34,7 @@ const UserManagement = () => {
         if (!window.confirm('Are you sure you want to delete this user?')) return;
 
         try {
-            await axios.delete(`/api/users/${userId}`);
+            await api.delete(`/users/${userId}`);
             fetchUsers(); // Refresh the list
         } catch (error) {
             alert(error.response?.data?.message || 'Error deleting user');

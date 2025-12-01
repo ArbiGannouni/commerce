@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import axios from 'axios';
+import api from '../../config/api.js';
 import Header from '../../components/Header';
 import ComponentLibrary from './ComponentLibrary';
 import Canvas from './Canvas';
@@ -38,7 +38,7 @@ const PageBuilder = () => {
 
     const loadPages = async () => {
         try {
-            const response = await axios.get('/api/builder/pages');
+            const response = await api.get('/builder/pages');
             setPages(response.data);
         } catch (error) {
             console.error('Error loading pages:', error);
@@ -47,7 +47,7 @@ const PageBuilder = () => {
 
     const loadCustomComponents = async () => {
         try {
-            const response = await axios.get('/api/builder/custom-components');
+            const response = await api.get('/builder/custom-components');
             setCustomComponents(response.data);
         } catch (error) {
             console.error('Error loading custom components:', error);
@@ -56,7 +56,7 @@ const PageBuilder = () => {
 
     const loadPage = async () => {
         try {
-            const response = await axios.get(`/api/page-builder/${pageName}`);
+            const response = await api.get(`/page-builder/${pageName}`);
             setComponents(response.data.layout_data);
             setPageSettings(response.data.page_settings || { defaultCategory: '' });
         } catch (error) {
@@ -251,7 +251,7 @@ const PageBuilder = () => {
     const savePage = async () => {
         setSaving(true);
         try {
-            await axios.post('/api/page-builder/save', {
+            await api.post('/page-builder/save', {
                 page_name: pageName,
                 layout_data: components,
                 page_settings: pageSettings
@@ -271,7 +271,7 @@ const PageBuilder = () => {
         }
 
         try {
-            await axios.post('/api/builder/custom-components', {
+            await api.post('/builder/custom-components', {
                 name: saveComponentName,
                 component_data: selectedComponent,
                 category: saveComponentCategory
@@ -295,7 +295,7 @@ const PageBuilder = () => {
         const pageSlug = newPageName.toLowerCase().replace(/\s+/g, '-');
 
         try {
-            await axios.post('/api/builder/pages', { page_name: pageSlug });
+            await api.post('/builder/pages', { page_name: pageSlug });
             alert(`Page "${newPageName}" created!`);
             setNewPageName('');
             setShowNewPageDialog(false);
@@ -310,7 +310,7 @@ const PageBuilder = () => {
         if (!window.confirm(`Delete page "${pageToDelete}"?`)) return;
 
         try {
-            await axios.delete(`/api/builder/pages/${pageToDelete}`);
+            await api.delete(`/builder/pages/${pageToDelete}`);
             alert('Page deleted!');
             loadPages();
             if (pageName === pageToDelete) {

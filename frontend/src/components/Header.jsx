@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../config/api.js';
 import useAuthStore from '../store/authStore';
 import useCartStore from '../store/cartStore';
 
@@ -25,7 +25,7 @@ const Header = () => {
 
     const loadSettings = async () => {
         try {
-            const response = await axios.get('/api/settings');
+            const response = await api.get('/settings');
             setSiteSettings({
                 siteName: response.data.siteName || 'E-Commerce',
                 logoUrl: response.data.logoUrl || '',
@@ -38,7 +38,7 @@ const Header = () => {
 
     const loadPages = async () => {
         try {
-            const response = await axios.get('/api/builder/pages');
+            const response = await api.get('/builder/pages');
             setPages(response.data.filter(p => p.page_name !== 'home'));
         } catch (error) {
             console.log('No pages found');

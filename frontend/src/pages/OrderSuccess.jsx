@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../config/api.js';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -12,7 +12,7 @@ const OrderSuccess = () => {
     useEffect(() => {
         const fetchOrder = async () => {
             try {
-                const response = await axios.get(`/api/orders/${orderId}`);
+                const response = await api.get(`/orders/${orderId}`);
                 setOrder(response.data);
             } catch (error) {
                 console.error('Error fetching order:', error);

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../config/api.js';
 import useCartStore from '../store/cartStore';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -17,7 +17,7 @@ const Checkout = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post('/api/orders', {
+            const response = await api.post('/orders', {
                 shipping_address: shippingAddress,
                 payment_method: paymentMethod
             });

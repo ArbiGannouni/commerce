@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../config/api.js';
 import useProductStore from '../../store/productStore';
 import Header from '../../components/Header';
 
@@ -21,7 +21,7 @@ const DashboardHome = () => {
 
     const fetchStats = async () => {
         try {
-            const ordersRes = await axios.get('/api/orders/admin/all');
+            const ordersRes = await api.get('/orders/admin/all');
             const orders = ordersRes.data;
 
             const totalRevenue = orders.reduce((sum, order) => sum + order.total_amount, 0);
@@ -41,7 +41,7 @@ const DashboardHome = () => {
 
     const fetchRecentOrders = async () => {
         try {
-            const response = await axios.get('/api/orders/admin/all');
+            const response = await api.get('/orders/admin/all');
             setRecentOrders(response.data.slice(0, 5));
         } catch (error) {
             console.error('Error fetching recent orders:', error);
