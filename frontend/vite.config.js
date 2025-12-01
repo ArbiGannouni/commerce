@@ -3,7 +3,8 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
     plugins: [react()],
-    server: {
+    base: '/commerce/',
+    /*server: {
         port: 3000,
         proxy: {
             '/api': {
@@ -15,5 +16,5 @@ export default defineConfig({
                 changeOrigin: true,
             }
         }
-    }
+    }*/
 });
